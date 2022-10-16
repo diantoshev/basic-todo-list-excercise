@@ -1,0 +1,15 @@
+.toDoList_container {
+    padding: 1rem;
+    background-color: #dcd1d1;
+    margin: 2rem auto;
+    width: 50rem;
+    max-width: 95%;
+    border: 3px solid #eb5e00;
+}
+
+.toDoList_container>div {
+    color: #eb5e00;
+    font-size: larger;
+    font-weight: bold;
+
+}

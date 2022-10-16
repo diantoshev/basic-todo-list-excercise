@@ -1,23 +1,40 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import ToDoList from './components/TODO-LIST/ToDoList';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import NewToDo from './components/ADD-TODO/NewToDo';
+import Navigation from './components/Navigation/Navigation';
+
+const initialTasks = JSON.parse(localStorage.getItem("toDos")) || [];
 
 function App() {
+  const [toDos, setToDos] = useState(initialTasks);
+
+  const addToDoHandler = (enteredData) => {
+    const newToDo = {
+      value: enteredData,
+      id: (Math.random() * 1).toString()
+    }
+    setToDos((previousToDos) => {
+      localStorage.setItem("toDos", JSON.stringify([newToDo, ...previousToDos]));
+      return [newToDo, ...previousToDos];
+    })
+  }
+
+  const deleteItemHandler = (id) => {
+    setToDos(toDos.filter(toDo => id !== toDo.id))
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navigation />
+      <Routes>
+        <Route path='/' element={<Navigate to='add-to-do' replace />} />
+        <Route path='allTasks' element={
+          <ToDoList onAddToDo={addToDoHandler} tasks={toDos} onDeleteItem={deleteItemHandler} />
+        } />
+        <Route path='add-to-do' element={<NewToDo setToDos={addToDoHandler} />} />
+      </Routes>
     </div>
   );
 }
